@@ -5,6 +5,9 @@ const morgan = require('morgan');
 //modulo que encuentra index
 const path = require('path');
 
+//requiero desde el archivo llamado database el modulo mongoose
+const { mongoose } = require('./database');
+
 //guardo ejecucion de express en constante app
 const app = express();
 
@@ -18,7 +21,7 @@ app.use(express.json());
 //Rutas (url)
 app.use('/api/tasks' ,require('./routes/task.routes'));
 
-//Archivos estaticos
+//Archivos estaticos, encuentra la carpeta 
 app.use(express.static(path.join(__dirname, 'public')))
 
 //Empezando el servidor
