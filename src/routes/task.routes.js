@@ -7,22 +7,42 @@ const router = express.Router();
 //como estoy en al carpeta routes subo un nivel
 const Task = require('../models/task');
 
-//retorno un objeto de tipo json
+//Obtengo todas las tareas
 router.get('/', async (req, res) => {
     //consulta a la bd
     const tasks = await Task.find();
     res.json(tasks);
 });
 
-//recibo datos del usuario y retorno un json
+//Obtengo una tarea especifica 
+router.get('/:id', async (req, res) => {
+    const task = await Task.findById(req.params.id);
+    res.json(task);
+});
+
+//recibo datos del usuario y guardo en la bd
 router.post('/', async (req, res) => {
     const { title, description } = req.body;
     //creo una nueva tarea 
-    new Task({title, description});
+    const task = new Task({title, description});
     //almaceno del dato en la bd
     await task.save();
     //envio el status
-    res.json({status: 'recibido'});
+    res.json({status: 'Tarea Guardada'});
 });
+
+//Actualizo los datos de la tarea
+router.put('/:id', async (req, res) => {
+    const { title, description } = req.body;
+    const newTask = {title, description};
+    await Task.findByIdAndUpdate(req.params.id, newTask);
+    res.json({status: 'Tarea actualizada'});
+});
+
+//Elimino una tarea
+router.delete('/:id', async (req, res) => {
+    await Task.findByIdAndRemove(rew.params.id);
+    res.json({status: 'Tarea Eliminada'});
+})
 
 module.exports = router;
