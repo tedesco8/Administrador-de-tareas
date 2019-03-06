@@ -1,12 +1,8 @@
-import React, { Component } from 'react';
+//importamos modulos 
+import React from 'react';
 import { render } from 'react-dom';
 
-//Creo un componente llamado app que muestra un h1
-class App extends Component {
-    render(){
-        return (
-            <h1>Hola Mundo</h1>
-        )
-    }
-}
+import App from './App';
+
+//indico que el componente app va en el div con id app
 render(<App/>, document.getElementById('app'));
