@@ -27,7 +27,12 @@ class App extends Component {
         })
         //Promesa para cuando retorne algo lo muestre por consola
         .then(res => res.json())
-        .then(data => console.log(data))
+        .then(data => {
+            console.log(data)
+            //ventana de materialize
+            M.toast({html: 'Tarea guardada'});
+            this.setState({title: '', description: ''});
+        })
         //Capturador de error
         .catch(err => console.error(err)); 
 
@@ -62,12 +67,12 @@ class App extends Component {
                                     <form onSubmit={this.addTask}>
                                         <div className="row">
                                             <div className="input-field col s12">
-                                                <input name="title" onChange={this.handleChange} type="text" placeholder="Titulo Tarea" />
+                                                <input name="title" onChange={this.handleChange} type="text" placeholder="Titulo Tarea" value= {this.state.title}/>
                                             </div>
                                         </div>
                                         <div className="row">
                                             <div className="input-field col s12">
-                                                <textarea name="description" onChange={this.handleChange} placeholder="Descripcion Tarea" className="materialize-texaerea"></textarea>
+                                                <textarea name="description" onChange={this.handleChange} placeholder="Descripcion Tarea" className="materialize-texaerea" value= {this.state.description}></textarea>
                                             </div>
                                         </div>
                                         <button type="submit" className="btn light-blue darken-4">Enviar</button>
