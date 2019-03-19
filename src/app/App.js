@@ -13,9 +13,24 @@ class App extends Component {
         this.addTask = this.addTask.bind(this);
     }
 
-    //deshabilito recarga del dom y obtengo estado
     addTask(e) {
-        console.log(this.state);
+        fetch('/api/tasks', {
+            //envio una petición post
+            method: 'POST',
+            //convierto el objeto state a string
+            body: JSON.stringify(this.state),
+            //tipo de contenido 
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        //Promesa para cuando retorne algo lo muestre por consola
+        .then(res => res.json())
+        .then(data => console.log(data))
+        //Capturador de error
+        .catch(err => console.error(err)); 
+
         e.preventDefault();
     }
 

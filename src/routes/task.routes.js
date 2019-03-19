@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
     //almaceno del dato en la bd
     await task.save();
     //envio el status
-    res.json({status: 'Tarea Guardada'});
+    res.json({status: 'Tarea Almacenada'});
 });
 
 //Actualizo los datos de la tarea
