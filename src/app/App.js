@@ -12,7 +12,7 @@ class App extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.addTask = this.addTask.bind(this);
     }
-
+    //envio tareas
     addTask(e) {
         fetch('/api/tasks', {
             //envio una petición post
@@ -31,12 +31,27 @@ class App extends Component {
             console.log(data)
             //ventana de materialize
             M.toast({html: 'Tarea guardada'});
+            //limpio el formulario
             this.setState({title: '', description: ''});
         })
         //Capturador de error
         .catch(err => console.error(err)); 
 
         e.preventDefault();
+    }
+
+    //evento para que utilice fetchTasks cuando carga la aplicacion
+    componentDidMount() {
+        this.fetchTasks();
+    }
+
+    //obtener tareas
+    fetchTasks(e) {
+        //consulta de tipo GET por defecto
+        fetch('/api/tasks')
+        //convierto la respuesta a json
+        .then(res => res.json())
+        .then(data => console.log(data));
     }
 
     //Obtendo los valores de los input y textarea
@@ -81,7 +96,14 @@ class App extends Component {
                             </div>
                         </div>
                         <div className="col s7">
-
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Título</th>
+                                        <th>Descripcion</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>    
