@@ -7,7 +7,8 @@ class App extends Component {
         super()
         this.state = {
             title: '',
-            description: ''
+            description: '',
+            tasks: []
         };
         this.handleChange = this.handleChange.bind(this);
         this.addTask = this.addTask.bind(this);
@@ -51,7 +52,10 @@ class App extends Component {
         fetch('/api/tasks')
         //convierto la respuesta a json
         .then(res => res.json())
-        .then(data => console.log(data));
+        .then(data => {
+            this.setState({tasks: data});
+            console.log(this.state.tasks);
+        });
     }
 
     //Obtendo los valores de los input y textarea
@@ -103,6 +107,18 @@ class App extends Component {
                                         <th>Descripcion</th>
                                     </tr>
                                 </thead>
+                                <tbody>
+                                    {
+                                        this.state.tasks.map(task => {
+                                            return (
+                                                <tr>
+                                                    <td>{task.title}</td>
+                                                    <td>{task.description}</td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
                             </table>
                         </div>
                     </div>
