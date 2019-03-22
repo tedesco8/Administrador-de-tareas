@@ -34,6 +34,8 @@ class App extends Component {
             M.toast({html: 'Tarea guardada'});
             //limpio el formulario
             this.setState({title: '', description: ''});
+            //pide las tareas nuevas y actualiza
+            this.fetchTasks();
         })
         //Capturador de error
         .catch(err => console.error(err)); 
@@ -52,6 +54,7 @@ class App extends Component {
         fetch('/api/tasks')
         //convierto la respuesta a json
         .then(res => res.json())
+        //cambiando el estado de la aplicacion
         .then(data => {
             this.setState({tasks: data});
             console.log(this.state.tasks);
@@ -111,9 +114,17 @@ class App extends Component {
                                     {
                                         this.state.tasks.map(task => {
                                             return (
-                                                <tr>
+                                                <tr key={task._id}>
                                                     <td>{task.title}</td>
                                                     <td>{task.description}</td>
+                                                    <td>
+                                                        <button className="btn light-blue darken-4">
+                                                            <i className="material-icons">delete</i>
+                                                        </button>
+                                                        <button className="btn light-blue darken-4" style={{margin: '4px'}}>
+                                                        <i className="material-icons">edit</i>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             )
                                         })
