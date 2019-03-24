@@ -13,7 +13,18 @@ class App extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.addTask = this.addTask.bind(this);
     }
-    //envio tareas
+
+    //Obtendo los valores de los input y textarea
+    handleChange(e) {
+        //obtengo el valor
+        const { name, value } = e.target;
+        //cambio el estado
+        this.setState({
+        [name]: value
+        });
+    }
+
+    //Guardando tareas
     addTask(e) {
         fetch('/api/tasks', {
             //envio una petición post
@@ -48,7 +59,7 @@ class App extends Component {
         this.fetchTasks();
     }
 
-    //obtener tareas
+    //obteniendo y mostrando tareas
     fetchTasks(e) {
         //consulta de tipo GET por defecto
         fetch('/api/tasks')
@@ -61,14 +72,23 @@ class App extends Component {
         });
     }
 
-    //Obtendo los valores de los input y textarea
-    handleChange(e) {
-        //obtengo el valor
-        const { name, value } = e.target;
-        //cambio el estado
-        this.setState({
-        [name]: value
-        });
+    //Eliminar tareas
+    deleteTask(id){
+        if(confirm('Esta seguro de querer eliminar esta tarea?')){
+            fetch(`/api/tasks/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                M.toast({html: 'Tarea eliminada'});
+                this.fetchTasks();
+            });
+        }
     }
 
     render(){
@@ -118,7 +138,7 @@ class App extends Component {
                                                     <td>{task.title}</td>
                                                     <td>{task.description}</td>
                                                     <td>
-                                                        <button className="btn light-blue darken-4">
+                                                        <button className="btn light-blue darken-4" onClick={() => this.deleteTask (task._id)}>
                                                             <i className="material-icons">delete</i>
                                                         </button>
                                                         <button className="btn light-blue darken-4" style={{margin: '4px'}}>
