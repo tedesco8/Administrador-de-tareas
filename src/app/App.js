@@ -8,7 +8,8 @@ class App extends Component {
         this.state = {
             title: '',
             description: '',
-            tasks: []
+            tasks: [],
+            _id: ''
         };
         this.handleChange = this.handleChange.bind(this);
         this.addTask = this.addTask.bind(this);
@@ -26,31 +27,48 @@ class App extends Component {
 
     //Guardando tareas
     addTask(e) {
-        fetch('/api/tasks', {
-            //envio una petición post
-            method: 'POST',
-            //convierto el objeto state a string
-            body: JSON.stringify(this.state),
-            //tipo de contenido 
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        //Promesa para cuando retorne algo lo muestre por consola
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-            //ventana de materialize
-            M.toast({html: 'Tarea guardada'});
-            //limpio el formulario
-            this.setState({title: '', description: ''});
-            //pide las tareas nuevas y actualiza
-            this.fetchTasks();
-        })
-        //Capturador de error
-        .catch(err => console.error(err)); 
-
+        if(this.state._id){
+            fetch(`/api/tasks/${this.state._id}`, {
+                method: 'PUT',
+                body: JSON.stringify(this.state),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                M.toast({html: 'Tarea Actualizada'});
+                this.setState({title: '', description: '', _id: ''});
+                this.fetchTasks();
+            });
+        } else {
+            fetch('/api/tasks', {
+                //envio una petición post
+                method: 'POST',
+                //convierto el objeto state a string
+                body: JSON.stringify(this.state),
+                //tipo de contenido 
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            //Promesa para cuando retorne algo lo muestre por consola
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                //ventana de materialize
+                M.toast({html: 'Tarea guardada'});
+                //limpio el formulario
+                this.setState({title: '', description: ''});
+                //pide las tareas nuevas y actualiza
+                this.fetchTasks();
+            })
+            //Capturador de error
+            .catch(err => console.error(err)); 
+        }
         e.preventDefault();
     }
 
@@ -89,6 +107,19 @@ class App extends Component {
                 this.fetchTasks();
             });
         }
+    }
+    //realizo consulta a la bd para obtener datos
+    editTask(id){
+        fetch(`/api/tasks/${id}`)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            this.setState({
+                title: data.title, 
+                description: data.description,
+                _id: data._id
+            })
+        });
     }
 
     render(){
@@ -141,8 +172,8 @@ class App extends Component {
                                                         <button className="btn light-blue darken-4" onClick={() => this.deleteTask (task._id)}>
                                                             <i className="material-icons">delete</i>
                                                         </button>
-                                                        <button className="btn light-blue darken-4" style={{margin: '4px'}}>
-                                                        <i className="material-icons">edit</i>
+                                                        <button onClick={() => this.editTask (task._id)}className="btn light-blue darken-4" style={{margin: '4px'}}>
+                                                            <i className="material-icons">edit</i>
                                                         </button>
                                                     </td>
                                                 </tr>
